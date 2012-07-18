@@ -1,6 +1,6 @@
-kitchensink: Example Using Multiple Java EE 6 Technologies Deployed as a WAR
+Red Hat Dashboard: A simple GWT application to provide a BAM for BRMS
 ============================================================================
-Author: Christian Sadilek and Jonathan Fuerth, based on Pete Muir's JSF Kitchen Sink demo
+Author: Ricardo Martinelli de Oliveira, based on Pete Muir's JSF Kitchen Sink demo
 
 What is it?
 -----------
@@ -57,9 +57,9 @@ You can now deploy the artifact to JBoss AS by executing the following command:
 
     mvn jboss-as:deploy
 
-This will deploy `target/jboss-as-kitchensink-errai.war`.
+This will deploy `target/red-hat-dashboard.war`.
  
-The application will be running at the following URL <http://localhost:8080/jboss-as-kitchensink-errai/>.
+The application will be running at the following URL <http://localhost:8080/red-hat-dashboard/>.
 
 To undeploy from JBoss AS, run this command:
 
