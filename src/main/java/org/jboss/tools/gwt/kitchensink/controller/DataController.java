@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 
 import org.jboss.errai.bus.server.annotations.Service;
 import org.jboss.tools.gwt.kitchensink.client.shared.DataControllerService;
@@ -13,8 +12,6 @@ import org.jboss.tools.gwt.kitchensink.client.shared.DataControllerService;
 @Service
 public class DataController implements DataControllerService {
 	
-	private Event<Map<String, Integer>> event;
-
 	@Override
 	public Integer getTxRate() {
 		return (int)(Math.random() * 100);
@@ -23,19 +20,19 @@ public class DataController implements DataControllerService {
 	@Override
 	public Map<String,Integer> getTransactionVolume() {
 		Map<String, Integer> data = new HashMap<String, Integer>();
-		data.put("Visa", 0);
-		data.put("Amex", 0);
-		data.put("Master", 0);
-		data.put("Diners", 0);
+		data.put("Visa", (int)(Math.random() * 120));
+		data.put("Amex", (int)(Math.random() * 150));
+		data.put("Master", (int)(Math.random() * 100));
+		data.put("Diners", (int)(Math.random() * 180));
 		return data;
 	}
 
 	@Override
 	public Map<String,Integer> getTransactionsStatus() {
 		Map<String, Integer> data = new HashMap<String, Integer>();
-		data.put("Cancelado", 0);
-		data.put("Aprovado", 0);
-		data.put("Negado", 0);
+		data.put("Cancelado", (int)(Math.random() * 120));
+		data.put("Aprovado", (int)(Math.random() * 120));
+		data.put("Negado", (int)(Math.random() * 120));
 		return data;
 	}
 	

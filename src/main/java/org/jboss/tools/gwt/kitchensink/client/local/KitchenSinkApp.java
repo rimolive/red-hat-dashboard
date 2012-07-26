@@ -9,6 +9,7 @@ import org.jboss.tools.gwt.kitchensink.client.shared.DataControllerService;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -41,13 +42,10 @@ public class KitchenSinkApp {
 		controller = new GraphDataController(memberService);
 		Runnable onLoadCallback = new Runnable() {
 			public void run() {
-				Panel panel = RootPanel.get("kitchensink");
-
-				columnChart = new ColumnChart(createColumnData(),
-						createColumnOptions());
+				final Panel panel = RootPanel.get("kitchensink");
+				columnChart = new ColumnChart(createColumnData(), createColumnOptions());
 				gauge = new Gauge(createTable(), createOptions());
 				pieChart = new PieChart(createPieData(), createPieOptions());
-
 				Grid g = new Grid(2, 1);
 				g.setWidth("865px");
 				Grid c = new Grid(1, 2);
@@ -56,8 +54,17 @@ public class KitchenSinkApp {
 				c.setWidget(0, 1, gauge);
 				g.setWidget(0, 0, c);
 				g.setWidget(1, 0, columnChart);
-
 				panel.add(g);
+				
+				Timer t = new Timer() {
+					public void run() {
+						columnChart.draw(createColumnData(), createColumnOptions());
+						gauge.draw(createTable(), createOptions());
+						pieChart.draw(createPieData(), createPieOptions());
+					}
+				};
+
+				t.scheduleRepeating(1000);
 			}
 		};
 
