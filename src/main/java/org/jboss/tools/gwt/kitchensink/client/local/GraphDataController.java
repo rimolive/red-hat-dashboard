@@ -1,5 +1,6 @@
 package org.jboss.tools.gwt.kitchensink.client.local;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -18,7 +19,9 @@ public class GraphDataController {
 
 	private final Caller<DataControllerService> controller;
 
-	private Map<String, Integer> map;
+	private Map<String, Integer> map = new HashMap<String, Integer>();
+	
+	private Integer number = new Integer(0);
 
 	public GraphDataController(Caller<DataControllerService> controller) {
 		this.controller = controller;
@@ -28,21 +31,24 @@ public class GraphDataController {
 		DataTable data = DataTable.create();
 		data.addColumn(ColumnType.STRING, "Bandeira");
 		data.addColumn(ColumnType.NUMBER, "Volume de Transacoes");
-		System.out.println("Requesting member list...");
-		map = controller.call(new RemoteCallback<Map<String, Integer>>() {
+		controller.call(new RemoteCallback<Map<String, Integer>>() {
 
 			@Override
 			public void callback(Map<String, Integer> response) {
-				System.out.println("Got result!");
+				GWT.log("Response size: " + response.size());
+				map.clear();
+				map.putAll(response);
+				GWT.log("After map.add() size: " + map.size());
 			}
 		}, new ErrorCallback() {
 			@Override
 			public boolean error(Message message, Throwable throwable) {
 				throwable.printStackTrace();
-				System.out.println("Failed to retrieve list of members: " + throwable.getMessage());
+				GWT.log("Failed to retrieve list of members: " + throwable.getMessage());
 				return false;
 			}
 		}).getTransactionVolume();
+		GWT.log("Column Chart size: " + map.size());
 		data.addRows(map.size());
 		for (Iterator<String> it = map.keySet().iterator(); it.hasNext();) {
 			String key = it.next();
@@ -57,7 +63,14 @@ public class GraphDataController {
 		DataTable data = DataTable.create();
 		data.addColumn(ColumnType.NUMBER, "Tx/minuto");
 		data.addRow();
-		data.setValue(0, 0, (int) (20 + (Math.random() * 10)));
+		controller.call(new RemoteCallback<Integer>() {
+
+			@Override
+			public void callback(Integer response) {
+				number = new Integer(response.intValue());
+			}
+		}).getTxRate();
+		data.setValue(0, 0, number.intValue());
 		return data;
 	}
 
@@ -65,12 +78,12 @@ public class GraphDataController {
 		DataTable data = DataTable.create();
 		data.addColumn(ColumnType.STRING, "Satistacao");
 		data.addColumn(ColumnType.NUMBER, "Porcentagem");
-		GWT.log("Requesting member list...");
+//		GWT.log("Requesting member list...");
 		controller.call(new RemoteCallback<Map<String, Integer>>() {
 
 			@Override
 			public void callback(Map<String, Integer> response) {
-				GWT.log("Got member list. Size: " + response.size());
+//				GWT.log("Got member list. Size: " + response.size());
 				map = response;
 			}
 		}).getTransactionsStatus();

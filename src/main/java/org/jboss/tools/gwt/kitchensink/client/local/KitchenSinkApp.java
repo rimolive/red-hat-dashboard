@@ -2,22 +2,17 @@ package org.jboss.tools.gwt.kitchensink.client.local;
 
 import javax.inject.Inject;
 
-import org.eclipse.jdt.internal.core.util.MementoTokenizer;
-import org.jboss.errai.bus.client.api.RemoteCallback;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ioc.client.api.Caller;
 import org.jboss.errai.ioc.client.api.EntryPoint;
 import org.jboss.tools.gwt.kitchensink.client.shared.DataControllerService;
-import org.jboss.tools.gwt.kitchensink.client.shared.GraphData;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.visualization.client.AbstractDataTable;
-import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
-import com.google.gwt.visualization.client.DataTable;
 import com.google.gwt.visualization.client.VisualizationUtils;
 import com.google.gwt.visualization.client.visualizations.ColumnChart;
 import com.google.gwt.visualization.client.visualizations.Gauge;
@@ -38,8 +33,6 @@ public class KitchenSinkApp {
 
 	@Inject
 	private Caller<DataControllerService> memberService;
-	
-	private GraphData graphData;
 	
 	private GraphDataController controller;
 
@@ -82,25 +75,8 @@ public class KitchenSinkApp {
 	}
 
 	protected AbstractDataTable createPieData() {
-		DataTable data = DataTable.create();
-		data.addColumn(ColumnType.STRING, "Satistacao");
-		data.addColumn(ColumnType.NUMBER, "Porcentagem");
-		GWT.log("Requesting member list...");
-		controller.call(new RemoteCallback<Map<String, Integer>>() {
-
-			@Override
-			public void callback(Map<String, Integer> response) {
-				GWT.log("Got member list. Size: " + response.size());
-				map = response;
-			}
-		}).getTransactionsStatus();
-		data.addRows(map.size());
-		for (Iterator<String> it = map.keySet().iterator(); it.hasNext();) {
-			String key = it.next();
-			data.setValue(0, 0, key);
-			data.setValue(0, 1, map.get(key));
-		}
-		return data;
+		GWT.log("Collecting Pie Chart data...");
+		return getDataController().generatePieChartData();
 	}
 
 	private GraphDataController getDataController() {
@@ -116,42 +92,13 @@ public class KitchenSinkApp {
 	}
 
 	protected AbstractDataTable createColumnData() {
-		DataTable data = DataTable.create();
-		data.addColumn(ColumnType.STRING, "Bandeira");
-		data.addColumn(ColumnType.NUMBER, "Volume de Transacoes");
-		System.out.println("Requesting member list...");
-//		memberService.call(new RemoteCallback<Map<String, Integer>>() {
-//
-//			@Override
-//			public void callback(Map<String, Integer> response) {
-//				Window.alert("response content: " + response);
-//				map = response;
-//			}
-//		}).getTransactionVolume();
-//		data.addRows(map.size());
-//		for (Iterator<String> it = map.keySet().iterator(); it.hasNext();) {
-//			String key = it.next();
-//			data.setValue(0, 0, key);
-//			data.setValue(0, 1, map.get(key));
-//		}
-
-		return data;
+		GWT.log("Collecting Column Chart data...");
+		return getDataController().generateColumnChartData();
 	}
 
 	protected AbstractDataTable createTable() {
-		DataTable data = DataTable.create();
-		data.addColumn(ColumnType.NUMBER, "Tx/minuto");
-		data.addRow();
-		memberService.call(new RemoteCallback<Integer>() {
-
-			@Override
-			public void callback(Integer response) {
-				Window.alert("Response Data: " + response);
-				graphData.setGaugeData(response.intValue());
-			}
-		}).getTxRate();
-		data.setValue(0, 0, graphData.getGaugeData().intValue());
-		return data;
+		GWT.log("Collecting Transaction Rate Metrics...");
+		return getDataController().generateTransactionRateData();
 	}
 
 	protected Options createOptions() {

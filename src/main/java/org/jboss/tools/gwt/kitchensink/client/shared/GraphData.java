@@ -1,17 +1,19 @@
 package org.jboss.tools.gwt.kitchensink.client.shared;
 
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 
 @Portable
-public class GraphData {
+public class GraphData implements Serializable {
 	
-	private Map<String, Integer> columnData;
+	private Map<String, Integer> columnData = new HashMap<String, Integer>();
 	
-	private Map<String, Integer> pieData;
+	private Map<String, Integer> pieData = new HashMap<String, Integer>();
 	
-	private Integer gaugeData;
+	private Integer gaugeData = 0;
 
 	public Map<String, Integer> getColumnData() {
 		return columnData;

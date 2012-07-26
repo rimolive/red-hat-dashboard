@@ -382,7 +382,7 @@
 						to not start the default server (embedded jetty), but to download the HTML 
 						host page from the configured runTarget. -->
 					<noServer>true</noServer>
-					<runTarget>http://localhost:8080/Kitchensink/KitchenSink.html</runTarget>
+					<runTarget>http://localhost:8080/red-hat-dashboard/App.html</runTarget>
 
 				</configuration>
 				<executions>
